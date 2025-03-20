@@ -2,13 +2,34 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import torch
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# Load the model and tokenizer
-model_name = "NickyGee44/tcg-expert-model"
-tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-model = GPT2LMHeadModel.from_pretrained(model_name)
+# Global variables for model and tokenizer
+model = None
+tokenizer = None
+
+def load_model():
+    global model, tokenizer
+    try:
+        logger.info("Loading model and tokenizer...")
+        model_name = "NickyGee44/tcg-expert-model"
+        tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+        model = GPT2LMHeadModel.from_pretrained(model_name)
+        logger.info("Model and tokenizer loaded successfully")
+    except Exception as e:
+        logger.error(f"Error loading model: {str(e)}")
+        raise
+
+# Load model on startup
+@app.on_event("startup")
+async def startup_event():
+    load_model()
 
 class Question(BaseModel):
     text: str
@@ -16,6 +37,9 @@ class Question(BaseModel):
 @app.post("/generate")
 async def generate_answer(question: Question):
     try:
+        if model is None or tokenizer is None:
+            load_model()
+
         # Format the prompt
         prompt = f"Question: {question.text}\nAnswer:"
         
@@ -36,6 +60,7 @@ async def generate_answer(question: Question):
         
         return {"answer": response}
     except Exception as e:
+        logger.error(f"Error generating answer: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/")

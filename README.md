@@ -1,5 +1,5 @@
 ---
-title: AutoTrain Advanced
+title: Tcgbotwits
 emoji: 🚀
 colorFrom: blue
 colorTo: green
@@ -9,13 +9,14 @@ short_description: Create powerful AI models without code
 hf_oauth: true
 hf_oauth_expiration_minutes: 36000
 hf_oauth_scopes:
- - read-repos
- - write-repos
- - manage-repos
- - inference-api
- - read-billing
+- read-repos
+- write-repos
+- manage-repos
+- inference-api
+- read-billing
 tags:
- - autotrain
+- autotrain
+license: apache-2.0
 ---
 
 # Docs

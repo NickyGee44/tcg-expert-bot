@@ -1,0 +1,17 @@
+{
+  "name": "tcg-expert-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for TCG expert knowledge",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@huggingface/inference": "^3.6.1",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1"
+  }
+}
